@@ -10,7 +10,7 @@ COPY ./pyproject.toml /rps/pyproject.toml
 COPY ./poetry.lock /rps/poetry.lock
 COPY ./configs /rps/configs/
 
-RUN poetry install --no-root
+RUN poetry install --no-root --without test
 RUN ./genrpc
 RUN poetry install --without test
 EXPOSE 2796
