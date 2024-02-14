@@ -29,9 +29,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
       - name: Install RPS
-        run: poetry install
-      - name: Generate GRPC code
-        run: ./genrpc
+        run: |
+          poetry install --no-root
+          ./genrpc
+          poetry install
       - name: Run Tests
         run: poetry run pytest test/unit/
 
@@ -59,8 +60,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
       - name: Install RPS
-        run: poetry install
-      - name: Generate GRPC code
-        run: ./genrpc
+        run: |
+          poetry install --no-root
+          ./genrpc
+          poetry install
       - name: Run Tests
         run: poetry run pytest test/integration/
