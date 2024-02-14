@@ -45,5 +45,7 @@ jobs:
           cache: 'poetry'
       - name: Install RPS
         run: poetry install
+      - name: Generate GRPC code
+        run: ./genrpc
       - name: Run Tests
         run: poetry run pytest test/integration/
