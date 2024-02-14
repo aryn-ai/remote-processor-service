@@ -8,7 +8,6 @@ packages = [
     { include = "lib" },
     { include = "service" },
     { include = "gen" },
-    { include = "test" }
 ]
 
 [tool.poetry.dependencies]
