@@ -19,7 +19,7 @@ grpcio = "1.60.0"
 grpcio-tools = "1.60.0"
 cbor2 = "^5.6.0"
 jupyter = "^1.0.0"
-sycamore-ai = {path = "../sycamore", develop = true}
+sycamore-ai = "^0.1.12"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.0.0"
