@@ -96,6 +96,7 @@ class DedupResponseProcessor(ResponseProcessor):
                     print("KEEP", name, file=sys.stderr)
                 else:
                     print("NUKE", name, file=sys.stderr)
+        resp.internal_response.hits.total_hits.value = len(newAry)
         del resp.internal_response.hits.hits[:]
         resp.internal_response.hits.hits.extend(newAry)
         return resp

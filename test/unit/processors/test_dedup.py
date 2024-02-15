@@ -8,7 +8,7 @@ from lib.processors.dedup_processor import DedupResponseProcessor
 def mkShingles(x: int):
     ary = []
     for i in range(16):
-        ary.append(x & 1)
+        ary.append((i << 16) + (x & 1))  # shingle must be monotonic increasing
         x //= 2
     return ary
 
@@ -49,10 +49,10 @@ def mkHit(x: int):
 
 def mkHitAry():
     return [
-        mkHit(0),
-        mkHit(1),
-        mkHit(2),
-        mkHit(3),
+        mkHit(0),  # 0000
+        mkHit(1),  # 0001
+        mkHit(2),  # 0010
+        mkHit(3),  # 0011
     ]
 
 
@@ -82,8 +82,13 @@ class TestDedupProcessor:
     def test_smoke(self):
         req = None
         resp = mkSearchResp()
+        assert resp.internal_response.hits.total_hits.value == 4
         assert len(resp.internal_response.hits.hits) == 4
-        cfg = {"threshold": 0.4}
+        cfg = {"threshold": 0.1}
         proc = DedupResponseProcessor.from_config(cfg)
         resp = proc.process_response(req, resp)
-        assert len(resp.internal_response.hits.hits) == 3
+        hits = resp.internal_response.hits
+        assert hits.total_hits.value == 2
+        assert len(hits.hits) == 2
+        assert hits.hits[0].doc_id == 0
+        assert hits.hits[1].doc_id == 3
