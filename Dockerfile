@@ -10,8 +10,9 @@ ARG RPS_PORT=2796
 FROM python:3.11 AS rps_common
 
 WORKDIR /rps
-COPY ./poetry.lock ./pyproject.toml ./Makefile /rps/
+COPY ./Makefile /rps/
 RUN make install_poetry
+COPY ./poetry.lock ./pyproject.toml /rps/
 RUN make common_build
 
 ##########

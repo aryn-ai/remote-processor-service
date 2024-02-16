@@ -3,7 +3,7 @@ help:
 
 install_poetry:
 	apt update
-	DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends python3-poetry
+	DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends python3-poetry gcc python3-dev
 	apt clean
 	-rm -rf /var/lib/apt/lists/*
 	poetry config virtualenvs.path /rps/poetry_venv
