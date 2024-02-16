@@ -1,17 +1,38 @@
-FROM mwalbeck/python-poetry:1.7-3.11
+
+ARG POETRY_NO_INTERACTION=1
+ARG POETRY_VIRTUALENVS_IN_PROJECT=1
+ARG POETRY_VIRTUALENVS_CREATE=1 \
+ARG POETRY_CACHE_DIR=/tmp/poetry_cache
+ARG RPS_PORT=2796
+
+##########
+# Common: resolve dependencies
+FROM python:3.11 AS rps_common
 
 WORKDIR /rps
-# Selectively bring in the minimal things to run the service
-COPY ./protocols /rps/protocols/
-COPY ./genrpc /rps/genrpc
-COPY ./service /rps/service/
-COPY ./lib /rps/lib/
-COPY ./pyproject.toml /rps/pyproject.toml
-COPY ./poetry.lock /rps/poetry.lock
-COPY ./configs /rps/configs/
+COPY ./poetry.lock ./pyproject.toml ./Makefile /rps/
+RUN make install_poetry
+RUN make common_build
 
-RUN poetry install --no-root --without test
-RUN ./genrpc
-RUN poetry install --without test
-EXPOSE 2796
+##########
+# Build: build package, compile protobufs
+FROM rps_common AS rps_build
+
+# Build the proto files into python
+COPY ./protocols /rps/protocols
+RUN make build_proto
+
+##########
+# Run: run the server
+FROM rps_common AS rps_server
+
+COPY --from=rps_build /rps/proto_remote_processor /rps/proto_remote_processor
+COPY ./lib /rps/lib/
+COPY ./service /rps/service
+COPY ./README.md /rps/README.md
+RUN make full_build
+
+EXPOSE $RPS_PORT
+COPY ./configs /rps/configs
+
 CMD ["poetry", "run", "server", "configs/cfg1.yml"]
