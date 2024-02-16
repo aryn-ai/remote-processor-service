@@ -46,7 +46,7 @@ jobs:
       - name: Install RPS
         run: |
           poetry install --no-root
-          ./genrpc
+          make build_proto
           poetry install
       - name: Run Tests
         run: poetry run pytest test/integration/
