@@ -3,4 +3,4 @@
 *.py[cod]
 *.zip
 .idea/*
-gen/*
+proto_remote_processor/*

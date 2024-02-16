@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [
     { include = "lib" },
     { include = "service" },
-    { include = "gen" },
+    { include = "proto_remote_processor" },
 ]
 
 [tool.poetry.dependencies]
