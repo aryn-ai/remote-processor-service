@@ -29,4 +29,9 @@ common_build:
 	poetry install --no-root --only main
 
 server_build:
-	poetry install --only-root --only main
+	poetry install --only-root
+
+aryn_user:
+	groupadd --gid 1000 aryn
+	useradd --uid 1000 --gid 1000 --home-dir /aryn --password=y --no-create-home aryn
+	chown -R aryn:aryn /aryn
