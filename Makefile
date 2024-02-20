@@ -1,5 +1,10 @@
 help:
-	@echo "No help for you"
+	@echo "install_poetry: installs poetry on ubuntu"
+	@echo "clean: clean up grpc-generated code (by deletion)"
+	@echo "build_proto: generate code from the .proto files in protocols/proto-remote-processor"
+	@echo "install_rps: installs dependencies, builds proto, then installs the package"
+	@echo "common_build: install main dependencies"
+	@echo "server_build: install the package, but not the dependencies"
 
 install_poetry:
 	apt update
@@ -12,10 +17,16 @@ clean:
 	-rm -rd proto_remote_processor
 
 build_proto:
+	poetry install --no-root --with build
 	poetry run python -m grpc_tools.protoc -I protocols/ --python_out=. --pyi_out=. --grpc_python_out=. protocols/proto-remote-processor/*.proto
 
-common_build:
-	poetry install --no-root --without test
+install_rps:
+	poetry install --no-root
+	make build_proto
+	poetry install --only-root
 
-full_build:
-	poetry install --without test
+common_build:
+	poetry install --no-root --only main
+
+server_build:
+	poetry install --only-root --only main

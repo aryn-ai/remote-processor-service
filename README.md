@@ -15,7 +15,7 @@ poetry install --no-root
 Next, generate the grpc/protobuf code. Due to some weirdness in the way protobuf python handles imports I wrote a script that screws with the directory structure (only for the grpc generate call).
 Once the grpc code is generated you can install the package itself.
 ```
-./genrpc
+make build_proto
 poetry install
 ```
 
