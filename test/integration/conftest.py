@@ -27,7 +27,7 @@ def opensearch_client():
 
 @pytest.fixture(scope="module")
 def setup_containers(opensearch_client):
-    build_plugin_artifact()
+    #build_plugin_artifact()
     opensearch_image = build_plugin_container()
     server_image = build_service_container()
     network, opensearch_container, rps_container = run_compose(server_image, opensearch_image)
@@ -56,8 +56,7 @@ def create_commondir():
 
 
 def build_plugin_container():
-    shutil.copyfile("opensearch-remote-processor/build/distributions/remote-processor-2.12.0-SNAPSHOT.zip", "docker/remote-processor-2.12.0-SNAPSHOT.zip")
-    image, logs = docker.DockerClient().images.build(path="docker", tag="test-rps-os", dockerfile="Dockerfile.os")
+    image, logs = docker.DockerClient().images.build(path=".", tag="test-rps-os", dockerfile="docker/Dockerfile")
     return image
 
 
