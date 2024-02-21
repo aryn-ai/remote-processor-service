@@ -40,9 +40,9 @@ COPY --from=rps_build --chown=aryn:aryn /aryn/rps/proto_remote_processor ./proto
 COPY --chown=aryn:aryn ./lib ./lib/
 COPY --chown=aryn:aryn ./service ./service
 COPY --chown=aryn:aryn ./README.md ./README.md
+COPY --chown=aryn:aryn ./configs ./configs
 RUN make -f ../Makefile server_build
 
 EXPOSE $RPS_PORT
-COPY --chown=aryn:aryn ./configs ./configs
 
 CMD ["poetry", "run", "server", "configs/cfg1.yml"]
