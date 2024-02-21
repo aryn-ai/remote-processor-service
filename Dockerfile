@@ -22,28 +22,27 @@ RUN make install_poetry
 USER aryn
 WORKDIR /aryn/rps/
 COPY --chown=aryn:aryn ./poetry.lock ./pyproject.toml ./
-RUN mv ../Makefile ./
-RUN make common_build
+RUN make -f ../Makefile common_build
 
 ##########
 # Build: build package, compile protobufs
 FROM rps_common AS rps_build
 
 # Build the proto files into python
-COPY --chown=aryn:aryn ./protocols /aryn/rps/protocols
-RUN make build_proto
+COPY --chown=aryn:aryn ./protocols ./protocols
+RUN make -f ../Makefile build_proto
 
 ##########
 # Run: run the server
 FROM rps_common AS rps_server
 
-COPY --from=rps_build --chown=aryn:aryn /aryn/rps/proto_remote_processor /aryn/rps/proto_remote_processor
-COPY --chown=aryn:aryn ./lib /aryn/rps/lib/
-COPY --chown=aryn:aryn ./service /aryn/rps/service
-COPY --chown=aryn:aryn ./README.md /aryn/rps/README.md
-RUN make server_build
+COPY --from=rps_build --chown=aryn:aryn /aryn/rps/proto_remote_processor ./proto_remote_processor
+COPY --chown=aryn:aryn ./lib ./lib/
+COPY --chown=aryn:aryn ./service ./service
+COPY --chown=aryn:aryn ./README.md ./README.md
+RUN make -f ../Makefile server_build
 
 EXPOSE $RPS_PORT
-COPY --chown=aryn:aryn ./configs /aryn/rps/configs
+COPY --chown=aryn:aryn ./configs ./configs
 
 CMD ["poetry", "run", "server", "configs/cfg1.yml"]
