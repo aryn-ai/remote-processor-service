@@ -1,7 +1,7 @@
 version: '3'
 services:
   opensearch:
-    image: os-rps
+    image: rps-os
     container_name: opensearch
     environment:
       - discovery.type=single-node
