@@ -1,9 +1,9 @@
 # Remote Processor Service
 This project aims to enable "Remote Search Processors". OpenSearch allows post-processing of search responses and requests 
 via an object called a "Search Processor". We've found that implementing these in java and building and installing a plugin
-every time we want to change the behavior of such a search processor is extremely painful. Our solution is to simply pull
-the search processors out of OpenSearch entirely; instead we install a single plugin that makes RPCs to an external service
-which contains the processors. This is the external service; the plugin is [over here](https://github.com/aryn-ai/opensearch-remote-processor).
+every time we want to change the behavior of such a search processor produces a very long iteration cycle. Our solution is 
+to simply pull the search processors out of OpenSearch entirely; instead we install a single plugin that makes RPCs to an 
+external service which contains the processors. This is the external service; the plugin is [over here](https://github.com/aryn-ai/opensearch-remote-processor).
 
 In order to keep as much parity with the OpenSearch Search Processor interface, the plugin and external service communicate
 through protocol-buffered forms of the OpenSearch-internal SearchResponse and SearchRequest objects. The protobuf definitions
