@@ -4,7 +4,7 @@ Service and library for remote processors
 ## Instructions 
 Setting this up takes a couple steps. First, get the protocols submodule with
 ```
-git submodule update --init --remote
+git submodule update --init --recursive
 ```
 
 Also install the poetry packages and stuff
