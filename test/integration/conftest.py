@@ -1,9 +1,7 @@
 import json
-import subprocess
 import time
 
 import docker
-import shutil
 from pathlib import Path
 
 import pytest
@@ -27,7 +25,6 @@ def opensearch_client():
 
 @pytest.fixture(scope="module")
 def setup_containers(opensearch_client):
-    #build_plugin_artifact()
     opensearch_image = build_plugin_container()
     server_image = build_service_container()
     network, opensearch_container, rps_container = run_compose(server_image, opensearch_image)
@@ -36,23 +33,6 @@ def setup_containers(opensearch_client):
     opensearch_container.stop()
     rps_container.stop()
     network.remove()
-
-
-def build_plugin_artifact():
-    create_commondir()
-    path = (Path(".") / "opensearch-remote-processor")
-    p = subprocess.Popen(args=["./gradlew", "assemble"], cwd=path)
-    p.wait()
-
-
-def create_commondir():
-    """
-    The opensearch plugin gradle plugin expects to be able to find this file.
-    Git submodule shenanigans mess it up, so I have to create it manually
-    """
-    commondir = Path(".git/modules/opensearch-remote-processor/commondir")
-    with open(commondir, "w") as f:
-        f.write(".")
 
 
 def build_plugin_container():
