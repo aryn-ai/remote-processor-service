@@ -14,11 +14,12 @@ def read_cfg(config):
     service = RemoteProcessorService(config)
     print(service)
     print(service._pipelines)
-    print(service._pipelines['debug']._processors)
 
 @click.command()
 @click.argument('config', type=click.Path(exists=True))
-def serve(config):
+@click.option('--certfile', type=click.Path(exists=True), default=None)
+@click.option('--keyfile', type=click.Path(exists=True), default=None)
+def serve(config, certfile, keyfile):
     """
     Start the server on port 2796 with the configuration provided
 
@@ -26,5 +27,10 @@ def serve(config):
         config (filepath): A yaml file that describes all the search processors to run in the RPS
     """
     service = RemoteProcessorService(config)
-    server = service.start()
-    server.wait_for_termination()
+    if certfile is None or keyfile is None:
+        assert keyfile == certfile, "You must either specify both certfile and keyfile or specify neither"
+        server = service.start()
+        server.wait_for_termination()
+    else:
+        server = service.start_secure(certfile, keyfile)
+        server.wait_for_termination()
