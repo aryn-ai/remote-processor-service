@@ -29,8 +29,5 @@ def serve(config, certfile, keyfile):
     service = RemoteProcessorService(config)
     if certfile is None or keyfile is None:
         assert keyfile == certfile, "You must either specify both certfile and keyfile or specify neither"
-        server = service.start()
-        server.wait_for_termination()
-    else:
-        server = service.start(certfile, keyfile)
-        server.wait_for_termination()
+    server = service.start(certfile, keyfile)
+    server.wait_for_termination()

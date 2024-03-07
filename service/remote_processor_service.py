@@ -98,15 +98,11 @@ class RemoteProcessorService(RemoteProcessorServiceServicer):
             Server: a grpc server object
         """
         logging.info(PAPRIKA_ASCII_ART)
-        secure_mode = False
-        if certfile is not None and keyfile is not None:
-            secure_mode = True
-            logging.info("Starting service in secure mode")
-        else:
-            logging.info("Starting service in insecure mode")
+        secure_mode = bool(certfile and keyfile)
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=TP_MAX_WORKERS))
         add_RemoteProcessorServiceServicer_to_server(self, server)
         if secure_mode:
+            logging.info("Starting service in secure mode")
             with open(keyfile, 'rb') as f:
                 private_key = f.read()
             with open(certfile, 'rb') as f:
@@ -118,6 +114,7 @@ class RemoteProcessorService(RemoteProcessorServiceServicer):
             )
             server.add_secure_port("[::]:2796", channel_credentials)
         else:
+            logging.info("Starting service in insecure mode")
             server.add_insecure_port("[::]:2796")
         server.start()
         logging.info("RPS started on port 2796")
