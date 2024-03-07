@@ -32,5 +32,5 @@ def serve(config, certfile, keyfile):
         server = service.start()
         server.wait_for_termination()
     else:
-        server = service.start_secure(certfile, keyfile)
+        server = service.start(certfile, keyfile)
         server.wait_for_termination()
