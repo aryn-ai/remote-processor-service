@@ -1,1 +1,1 @@
-from search_request_pb2 import SearchRequest
+from .search_request_pb2 import SearchRequest
